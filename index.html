@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tik Tak Toaster</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { position: fixed; bottom: 0; width: 100%; display: flex; box-shadow: 0 0 10px black;}
+        form input { border: 0; border-radius: 0; outline: 0; padding: 10px; flex: 8; }
+        form button { background: black; color: white; border: none; border-radius: 0; padding: 20px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+</head>
+    <ul id="messages"></ul>
+    <form action="" id="form">
+      <input id="chatInput" autocomplete="off" placeholder="Message here" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        document.getElementById("form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            socket.emit('chatMessage', document.getElementById("chatInput").value);
+            document.getElementById("chatInput").value = "";
+            return false;
+        });
+
+        socket.on('chatMessage', function(message) {
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(message));
+            document.getElementById("messages").appendChild(li);
+        })
+    </script>
+  </body>
+</html>
